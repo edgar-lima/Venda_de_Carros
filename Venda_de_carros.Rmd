@@ -1,0 +1,6 @@
+---
+title: "Venda de carros"
+author: "Prof. MSc. Edgar Luiz de Lima"
+date: "21/03/2022"
+output: html_document
+---
