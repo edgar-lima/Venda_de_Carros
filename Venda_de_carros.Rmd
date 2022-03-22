@@ -52,6 +52,10 @@ vanuais$Escala<- as.factor(vanuais$Escala)
 vanuais$Ano<- as.numeric(as.character(vanuais$Ano))
 str(vanuais)
 ```
+Calculando a proporção de vendas de cada marca em relação ao total de vendas.
+```{r}
+
+```
 
 
 # Análise gráfica dos dados
@@ -62,11 +66,13 @@ ggplot(vanuais, aes(Ano, Total,colour= Escala))+
   geom_line(size= 1)+
   geom_point(size= 4)+
   scale_y_continuous(limits = c(10,240), breaks = seq(10,240,20))+
-  annotate("text", x = vanuais$Ano, y =vanuais$Total+8, 
+  annotate("text", x = vanuais$Ano, y =vanuais$Total+11, 
            label = vanuais$Total, size= 5)+
   ylab("Total de vendas")+
   theme_bw()+
-  theme(panel.grid= element_blank())
+  theme(panel.grid= element_blank(), axis.title = element_text(size= 16),
+        axis.text = element_text(size= 14, color = "black"), legend.title= element_blank(),
+        legend.text = element_text(size = 14))
 ```
 
 
