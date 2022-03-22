@@ -4,3 +4,43 @@ author: "Prof. MSc. Edgar Luiz de Lima"
 date: "21/03/2022"
 output: html_document
 ---
+
+# Preparação dos dados para as análises exploratórias
+
+Definindo diretório e carregando os pacotes necessários.
+```{r}
+setwd("C:\\Users\\Edgar\\OneDrive - unb.br\\Venda_de_carros\\Venda_de_Carros")
+library(openxlsx)
+library(tidyverse)
+```
+
+
+Carregando e visualizando os dados.
+```{r}
+dados<- read.xlsx("DadosVendaCarros.xlsx")
+View(dados)
+str(dados)
+```
+
+
+Construindo o conjunto de dados para avaliar o total de vendas por ano. Irei preparar também um conjunto de dados do total de vendas por ano para a marca Jaguar.
+```{r}
+# Criando a matriz com o número de vendas por ano para todas as marcas.
+TVanos<- data.frame(table(dados$Ano))
+names(TVanos)<- c("Ano","Total")
+
+# Criando a matriz do número de vendas por ano do carros da marca Jaguar.
+TVAjaguar<- dados%>%filter(Fabricante=="Jaguar")%>%
+  select(Ano)%>%table()%>%data.frame()
+names(TVAjaguar)<- c("Ano","Total")
+
+#Juntando em um mesmo dataframe
+vanuais<-rbind.data.frame(TVanos,TVAjaguar)
+vanuais<- rep(c("Total","Jaguar"), each= 4)%>%data.frame(vanuais)
+
+```
+
+# Análise gráfica dos dados
+
+
+
