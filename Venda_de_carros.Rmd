@@ -46,18 +46,28 @@ Checando a estrutura dos dados
 ```{r}
 str(vanuais)
 ```
+
 Transformando Escala em fator e ano em numérico.
 ```{r}
 vanuais$Escala<- as.factor(vanuais$Escala)
 vanuais$Ano<- as.numeric(as.character(vanuais$Ano))
 str(vanuais)
 ```
-Gerando a planilha de custo de entrega de veículos por fabricante.
+
+Gerando o conjunto de dados do custo de entrega de veículos por fabricante.
 ```{r}
-entrega<- dados%>% select(Fabricante,ValorCusto)%>% group_by(Fabricante)%>%
+entrega<- dados%>%filter(Ano==2019)%>% select(Fabricante,ValorCusto)%>% group_by(Fabricante)%>%
   summarise(valor_entrega= mean(ValorCusto))
+View(entrega)
 ```
 
+
+Gerando o conjunto de dados do custo de mão de obra por estado.
+```{r}
+mobra<- dados%>%filter(Ano==2019)%>%select(Estado,CustoMaoDeObra)%>% group_by(Estado)%>%
+  summarise(Media_MaoDeObra= mean(CustoMaoDeObra))
+View(mobra)
+```
 
 # Análise gráfica dos dados
 
