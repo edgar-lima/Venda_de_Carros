@@ -69,6 +69,19 @@ mobra<- dados%>%filter(Ano==2019)%>%select(Estado,CustoMaoDeObra)%>% group_by(Es
 View(mobra)
 ```
 
+Conjunto de dados para avaliar o lucro de cada marca, iremos analizar apenas com dados de 2019.
+```{r}
+dluc<- dados%>%filter(Ano==2019)%>%
+  select(Fabricante,Modelo,ValorVenda, ValorCusto)
+
+gluc<- dluc%>%group_by(Fabricante)%>% summarise(Mvendas= mean(ValorVenda, na.rm= T), Mcusto= mean(ValorCusto, na.rm= T))
+
+lucro<- gluc%>%mutate(lucro= Mvendas - Mcusto)
+lucro<- arrange(lucro,desc(lucro))
+View(lucro)
+```
+
+
 # Análise gráfica dos dados
 
 Analise gráfica do padrão temporal de vendas.
