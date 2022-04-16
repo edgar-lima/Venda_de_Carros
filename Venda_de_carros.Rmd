@@ -86,7 +86,7 @@ View(lucro)
 
 Analise gráfica do padrão temporal de vendas.
 ```{r}
-ggplot(vanuais, aes(Ano, Total,colour= Escala))+
+temporal<-ggplot(vanuais, aes(Ano, Total,colour= Escala))+
   geom_line(size= 1)+
   geom_point(size= 4)+
   scale_y_continuous(limits = c(10,240), breaks = seq(10,240,20))+
@@ -102,7 +102,7 @@ ggplot(vanuais, aes(Ano, Total,colour= Escala))+
 
 Gráfico do custo de entrega por fabricante
 ```{r}
-ggplot(entrega, aes(Fabricante, valor_entrega))+
+custo<-ggplot(entrega, aes(Fabricante, valor_entrega))+
   geom_col(fill="black")+
   annotate("text", x =entrega$Fabricante, y =entrega$valor_entrega+3000, 
            label = round(entrega$valor_entrega, 2), size= 4)+
@@ -117,7 +117,7 @@ ggplot(entrega, aes(Fabricante, valor_entrega))+
 
 Gráfico da mão de obra por estado.
 ```{r}
-ggplot(mobra, aes(Estado, Media_MaoDeObra))+
+maodeobra<-ggplot(mobra, aes(Estado, Media_MaoDeObra))+
   geom_col(fill="black")+
   coord_flip()+
   annotate("text", x =mobra$Estado, y =mobra$Media_MaoDeObra+80, 
@@ -133,7 +133,7 @@ ggplot(mobra, aes(Estado, Media_MaoDeObra))+
 
 Grafico com o lucro de cada marca.
 ```{r}
-ggplot(lucro, aes(Fabricante, lucro))+
+lum<-ggplot(lucro, aes(Fabricante, lucro))+
   geom_col(fill= "black")+
   coord_flip()+
   ylab("Lucro")+
