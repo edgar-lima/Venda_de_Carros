@@ -4,7 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     theme: cerulean
-    vertical_layout: fill
+    vertical_layout: scroll
     source_code: embed
 ---
 
@@ -96,7 +96,7 @@ ggplot(vanuais, aes(Ano, Total,colour= Escala))+
 
 ### Custo de entrega
 
-```{r}
+```{r, fig.width=10}
 ggplot(entrega, aes(Fabricante, valor_entrega))+
   geom_col(fill="black")+
   coord_flip()+
