@@ -1,0 +1,2 @@
+"0","#Carregando e visualizando os dados."
+"0","dados<- read.xlsx(""DadosVendaCarros.xlsx"")"

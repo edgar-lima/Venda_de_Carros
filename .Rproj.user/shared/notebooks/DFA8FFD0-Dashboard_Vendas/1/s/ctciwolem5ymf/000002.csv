@@ -1,0 +1,14 @@
+"0","ggplot(vanuais, aes(Ano, Total,colour= Escala))+"
+"0","  geom_line(size= 1)+"
+"0","  geom_point(size= 4)+"
+"0","  scale_y_continuous(limits = c(10,240), breaks = seq(10,240,20))+"
+"0","  annotate(""text"", x = vanuais$Ano, y =vanuais$Total+11, "
+"0","           label = vanuais$Total, size= 5)+"
+"0","  ylab(""Total de vendas"")+"
+"0","  theme_bw()+"
+"0","  theme(panel.grid= element_blank(), axis.title = element_text(size= 16),"
+"0","        axis.text = element_text(size= 14, color = ""black""), legend.title= element_blank(),"
+"0","        legend.text = element_text(size = 14))"
+"2","geom_path: Each group consists of only one observation.
+Do you need to adjust the group aesthetic?
+"

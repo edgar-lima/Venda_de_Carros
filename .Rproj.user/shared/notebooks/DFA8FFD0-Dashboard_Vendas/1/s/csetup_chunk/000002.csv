@@ -1,0 +1,4 @@
+"0","setwd(""C:\\Users\\Edgar\\OneDrive - unb.br\\Venda_de_carros\\Venda_de_Carros"")"
+"0","library(openxlsx)"
+"0","library(tidyverse)"
+"0","library(ggplot2)"
