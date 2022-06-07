@@ -1,4 +1,0 @@
-"0","#Gerando o conjunto de dados do custo de mão de obra por estado."
-"0","mobra<- dados%>%filter(Ano==2019)%>%select(Estado,CustoMaoDeObra)%>% group_by(Estado)%>%"
-"0","  summarise(Media_MaoDeObra= mean(CustoMaoDeObra))"
-"0",""
