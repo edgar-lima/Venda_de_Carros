@@ -1,3 +1,0 @@
-"0","mobra<- dados%>%filter(Ano==2019)%>%select(Estado,CustoMaoDeObra)%>% group_by(Estado)%>%"
-"0","  summarise(Media_MaoDeObra= mean(CustoMaoDeObra))"
-"0","View(mobra)"

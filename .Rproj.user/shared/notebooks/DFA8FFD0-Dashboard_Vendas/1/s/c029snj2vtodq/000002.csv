@@ -1,4 +1,0 @@
-"0","#Gerando o conjunto de dados do custo de entrega de veículos por fabricante."
-"0","entrega<- dados%>%filter(Ano==2019)%>% select(Fabricante,ValorCusto)%>% group_by(Fabricante)%>%"
-"0","  summarise(valor_entrega= mean(ValorCusto))"
-"0","entrega$Fabricante<- as.factor(entrega$Fabricante)"
