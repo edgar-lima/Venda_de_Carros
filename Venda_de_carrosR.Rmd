@@ -177,6 +177,6 @@ Dashboard com os principais resultados.
 ```{r, fig.height=10}
 ggarrange(st, UF, lc, LcPer, nrow = 2, ncol= 2)
 
-ggsave(filename = "ResultadosR.tiff", width = 35, height = 22, units = "cm", dpi = 200)
+ggsave(filename = "DashboardR.PDF", width = 35, height = 22, units = "cm", dpi = 200)
 ```
 
