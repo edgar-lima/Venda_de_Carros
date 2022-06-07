@@ -1,0 +1,182 @@
+---
+title: "Venda de carros"
+author: "Prof. MSc. Edgar Luiz de Lima"
+date: "21/03/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Preparação dos dados para as análises exploratórias
+
+Carregando os pacotes necessários.
+```{r}
+library(openxlsx)
+library(tidyverse)
+library(ggpubr)
+```
+
+
+Carregando e visualizando os dados.
+```{r}
+dados<- read.xlsx("DadosVendaCarros.xlsx")
+View(dados)
+str(dados)
+```
+Checando se há dados faltantes.
+```{r}
+summary(dados)
+```
+
+Construindo o conjunto de dados para avaliar o total de vendas por ano. Irei preparar também um conjunto de dados do total de vendas por ano para a marca Jaguar.
+```{r}
+# Criando a matriz com o número de vendas por ano para todas as marcas.
+TVanos<- data.frame(table(dados$Ano))
+names(TVanos)<- c("Ano","Total")
+
+# Criando a matriz do número de vendas por ano do carros da marca Jaguar.
+TVAjaguar<- dados%>%filter(Fabricante=="Jaguar")%>%
+  select(Ano)%>%table()%>%data.frame()
+names(TVAjaguar)<- c("Ano","Total")
+
+#Juntando em um mesmo dataframe
+vanuais<-rbind.data.frame(TVanos,TVAjaguar)
+vanuais<- rep(c("Total","Jaguar"), each= 4)%>%data.frame(vanuais)
+names(vanuais)<- c("Escala","Ano","Total")
+```
+
+Checando a estrutura dos dados
+```{r}
+str(vanuais)
+```
+
+Transformando Escala em fator e ano em numérico.
+```{r}
+vanuais$Escala<- as.factor(vanuais$Escala)
+vanuais$Ano<- as.numeric(as.character(vanuais$Ano))
+str(vanuais)
+```
+
+Gerando o conjunto de dados do custo de entrega de veículos por fabricante.
+```{r}
+entrega<- dados%>%filter(Ano==2019)%>% select(Fabricante,ValorCusto)%>% group_by(Fabricante)%>%
+  summarise(valor_entrega= mean(ValorCusto))
+entrega$Fabricante<- as.factor(entrega$Fabricante)
+View(entrega)
+```
+
+
+Gerando o conjunto de dados do custo de mão de obra por estado.
+```{r}
+mobra<- dados%>%filter(Ano==2019)%>%select(Estado,CustoMaoDeObra)%>% group_by(Estado)%>%
+  summarise(Media_MaoDeObra= mean(CustoMaoDeObra))
+mobra[,1]<-c("BA","ES","MG","PR","RJ","SP" )
+View(mobra)
+```
+
+Conjunto de dados para avaliar o lucro de cada marca, iremos analizar apenas com dados de 2019.
+```{r}
+dluc<- dados%>%filter(Ano==2019)%>%
+  select(Fabricante,Modelo,ValorVenda, ValorCusto)
+
+gluc<- dluc%>%group_by(Fabricante)%>% summarise(Mvendas= mean(ValorVenda, na.rm= T), Mcusto= mean(ValorCusto, na.rm= T))
+
+lucro<- gluc%>%mutate(Lucro= Mvendas - Mcusto)
+lucro<- arrange(lucro,desc(lucro))
+luper<- lucro[-1,]%>%mutate(LucroPer= Lucro/sum(lucro$Lucro))
+luper$LucroPer<- round(luper$LucroPer, 2)
+View(lucro)
+View(luper)
+```
+
+# Análise gráfica dos dados
+
+Analise gráfica do padrão temporal de vendas.
+```{r}
+st<-ggplot(vanuais, aes(Ano, Total,colour= Escala))+
+  geom_line(size= 1)+
+  geom_point(size= 4)+
+  scale_y_continuous(limits = c(10,240), breaks = seq(10,240,20))+
+  annotate("text", x = vanuais$Ano, y =vanuais$Total+11, 
+           label = vanuais$Total, size= 5)+
+  ylab("Total de vendas")+
+  theme_bw()+
+  theme(panel.grid= element_blank(), axis.title = element_text(size= 16),
+        axis.text = element_text(size= 14, color = "black"),panel.border = element_rect(size= 1.2), legend.title= element_blank(),
+        legend.text = element_text(size = 14),legend.position = c(.1, .9),
+        legend.background = element_blank())
+st
+```
+
+
+Gráfico do custo de entrega por fabricante
+```{r}
+ggplot(entrega, aes(Fabricante, valor_entrega))+
+  geom_col(fill="black")+
+  annotate("text", x =entrega$Fabricante, y =entrega$valor_entrega+3000, 
+           label = round(entrega$valor_entrega, 2), size= 4)+
+  ylab("Valor de entrega")+
+  xlab("Fabricante")+
+  theme_bw()+
+  theme(panel.grid= element_blank(), axis.title = element_text(size= 16),
+        axis.text = element_text(size= 14, color = "black"),panel.border = element_rect(size= 1.2), legend.title= element_blank(),
+        legend.text = element_text(size = 12))
+```
+
+
+Gráfico da mão de obra por estado.
+```{r}
+UF<-ggplot(mobra, aes(Estado, Media_MaoDeObra))+
+  geom_col(fill="black")+
+  coord_flip()+
+  annotate("text", x =mobra$Estado, y =mobra$Media_MaoDeObra+75, 
+          label =round(mobra$Media_MaoDeObra,2), size= 5)+
+  scale_y_continuous(limits = c(0,1200), breaks = seq(0,1200,150))+
+  ylab("Valor mão de obra")+
+  xlab("Fabricante")+
+  theme_bw()+
+  theme(panel.grid= element_blank(), axis.title = element_text(size= 16),
+        axis.text = element_text(size= 14, color = "black"),panel.border = element_rect(size= 1.2), legend.title= element_blank(),
+        legend.text = element_text(size = 12))
+UF
+```
+
+Grafico com o lucro de cada marca.
+```{r}
+lc<-ggplot( lucro, aes(Fabricante, Lucro,fill= Fabricante))+
+  geom_col()+
+  coord_flip()+
+  scale_fill_manual(values = c("grey", "darkorange", "cyan4","purple",
+                               "blue", "darkgreen", "red")) +
+  ylab("Lucro")+
+  xlab("Fabricante")+
+  theme_bw()+
+  theme(panel.grid= element_blank(), axis.title = element_text(size= 16),
+        axis.text = element_text(size= 14, color = "black"),panel.border = element_rect(size= 1.2), legend.position = "none")
+lc
+```
+
+Grafico com a porcentagem de lucro para cada marca.
+```{r}
+LcPer<-ggplot(luper, aes(2,LucroPer, fill= Fabricante))+
+  geom_bar(stat= "identity")+
+  geom_text(aes(label= paste0(LucroPer, "%")), color= "white",
+            position= position_stack(vjust= .5), size= 5)+
+  scale_fill_manual(values = c("darkgrey", "darkorange", "cyan4","purple",
+                               "blue", "darkgreen")) +
+   xlim(0, 2.5) +
+   coord_polar(theta = "y", start = 0) +
+    theme_void() +
+    theme(legend.position = c(1.1, .5),
+          legend.title = element_text(size = 18),
+          legend.text = element_text(size = 12))
+LcPer
+```
+
+Dashboard com os principais resultados.
+```{r, fig.height=10}
+ggarrange(st, UF, lc, LcPer, nrow = 2, ncol= 2)
+
+ggsave(filename = "ResultadosR.tiff", width = 35, height = 22, units = "cm", dpi = 200)
+```
+
